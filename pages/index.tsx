@@ -9,7 +9,7 @@ function Home() {
                 <div className="grid grid-cols-2 gap-10">
                     <div className="space-y-10 flex flex-col justify-center items-start">
                         <h1 className="text-5xl font-bold leading-tight">
-                            Online <span className="text-green-700">Assignment</span> Submission Manager
+                            Online <span className="text-green-700">Assignment Submission</span> Manager
                         </h1>
 
                         <p className="mt-4 text-lg text-gray-500">Easily manage your assignments and submit them online. Get your assignments with ease 🤓</p>
