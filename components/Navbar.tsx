@@ -4,7 +4,7 @@ type Props = {};
 
 function Navbar({}: Props) {
     return (
-        <nav className="flex justify-between items-center py-4 px-5 md:px-10 shadow-sm bg-white">
+        <nav className="flex justify-between items-center py-4 px-5 md:px-10 shadow-sm bg-white absolute top-0 w-full mx-auto z-10">
             <h1 className="text-3xl font-bold">OASM</h1>
 
             <div className="space-x-5">
