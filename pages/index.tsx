@@ -4,7 +4,7 @@ import React from "react";
 function Home() {
     return (
         <MainLayout>
-            <div>
+            <div className="">
                 <h1 className="text-3xl font-bold underline">Hello world!</h1>
             </div>
         </MainLayout>

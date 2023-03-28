@@ -8,12 +8,10 @@ type Props = {
 
 function MainLayout({ children }: Props) {
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto flex flex-col min-h-screen bg-gray-50">
             <Navbar />
-            <main className="bg-gray-100 dark:bg-gray-900">
-                <div className="container mx-auto px-4 sm:px-8">
-                    <div className="py-8">{children}</div>
-                </div>
+            <main className="w-full px-5 md:px-10 flex-1">
+                <div className="py-8">{children}</div>
             </main>
 
             <Footer />
