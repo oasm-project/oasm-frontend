@@ -5,7 +5,7 @@ import React from "react";
 function Home() {
     return (
         <MainLayout>
-            <div className="px-5 md:px-10 pt-36">
+            <div className="px-5 md:px-10 pt-36 flex-1">
                 <div className="grid grid-cols-2 gap-10">
                     <div className="space-y-10 flex flex-col justify-center items-start">
                         <h1 className="text-5xl font-bold leading-tight">
