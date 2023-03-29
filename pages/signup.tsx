@@ -1,7 +1,8 @@
 import { authRegister, departmentsGetAll } from "@/api";
 import { getSession } from "@/api/getSession";
-import { Button, SelectInput, TextInput } from "@/components";
+import { Button, Modal, SelectInput, TextInput } from "@/components";
 import { AuthLayout } from "@/components/Layout";
+import { ModalHandle } from "@/components/Modal";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
@@ -9,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { BsCheckCircleFill } from "react-icons/bs";
 
 type FormInputs = {
     name: string;
@@ -31,6 +33,7 @@ type Props = {
 
 const SignUp = ({ departments }: Props) => {
     const [loading, setLoading] = React.useState(false);
+    const modalRef = React.useRef<ModalHandle>(null);
     const router = useRouter();
 
     const {
@@ -49,21 +52,18 @@ const SignUp = ({ departments }: Props) => {
     });
 
     const registerAs = watch("registerAs");
+    const email = watch("email");
 
     const onSubmit = async (data: FormInputs) => {
         setLoading(true);
         try {
             const response = await authRegister({ ...data, departmentId: data.department });
 
-            console.log(response);
-
             if (response.data.success) {
                 const { accessToken, refreshToken } = response.data.data.token as {
                     accessToken: string;
                     refreshToken: string;
                 };
-
-                console.log(process.env.NODE_ENV);
 
                 setCookie("access_token", accessToken, {
                     maxAge: 60 * 60, // 1 hour
@@ -75,7 +75,7 @@ const SignUp = ({ departments }: Props) => {
                     path: "/"
                 });
 
-                router.push("/admin");
+                modalRef.current?.open();
             }
         } catch (error: AxiosError | any) {
             if (error.response?.status === 400) {
@@ -215,6 +215,26 @@ const SignUp = ({ departments }: Props) => {
                     </Link>
                 </p>
             </div>
+
+            {/* Account Verification Link sent */}
+            <Modal noCancelButton ref={modalRef} onModalClose={() => router.push("/")}>
+                <div className="flex flex-col items-center justify-center max-w-[400px] p-5">
+                    <div className="flex items-center justify-center w-32 h-32 bg-green-100 rounded-full">
+                        <BsCheckCircleFill className="w-24 h-24 text-green-700" />
+                    </div>
+
+                    <h3 className="mt-3 text-xl font-medium text-gray-900">Account Created</h3>
+
+                    <div className="mt-2">
+                        {registerAs === "student" && (
+                            <p className="text-sm text-gray-500 text-center">
+                                We&apos;ve sent an email to <span className="font-medium text-gray-900">{email}</span> with a link to verify your account.
+                            </p>
+                        )}
+                        {registerAs === "lecturer" && <p className="text-sm text-gray-500 text-center">Your account will be verified by an admin.</p>}
+                    </div>
+                </div>
+            </Modal>
         </AuthLayout>
     );
 };
