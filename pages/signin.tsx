@@ -1,6 +1,6 @@
 import { authLogin } from "@/api";
 import { getSession } from "@/api/getSession";
-import { Button } from "@/components";
+import { Button, TextInput } from "@/components";
 import { MainLayout } from "@/components/Layout";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
@@ -19,7 +19,7 @@ type FormInputs = {
 const SignIn = () => {
     const [loading, setLoading] = React.useState(false);
     const {
-        register,
+        control,
         handleSubmit,
         setError,
         formState: { errors }
@@ -82,31 +82,27 @@ const SignIn = () => {
                         <p className="text-center mt-4 text-lg text-gray-500">Sign in to your account to continue</p>
 
                         <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-5">
-                            <div className="space-y-2">
-                                <label htmlFor="email" className="text-gray-500">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    {...register("email", { required: true })}
-                                    placeholder="Enter your email"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                                />
-                                {errors.email && <p className="text-red-500">This field is required</p>}
-                            </div>
+                            <TextInput
+                                control={control}
+                                name="email"
+                                type="email"
+                                label="Email"
+                                placeholder="Enter your email"
+                                rules={{
+                                    required: "Email is required"
+                                }}
+                            />
 
-                            <div className="space-y-2">
-                                <label htmlFor="password" className="text-gray-500">
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    placeholder="Enter your password"
-                                    {...register("password", { required: true })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent"
-                                />
-                                {errors.password && <p className="text-red-500">This field is required</p>}
-                            </div>
+                            <TextInput
+                                control={control}
+                                name="password"
+                                type="password"
+                                label="Password"
+                                placeholder="Enter your password"
+                                rules={{
+                                    required: "Password is required"
+                                }}
+                            />
 
                             <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold" />
 
