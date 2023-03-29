@@ -198,7 +198,7 @@ const SignUp = ({ departments }: Props) => {
                     <>
                         <SelectInput control={control} data={LEVEL_DATA} name="level" label="Level" />
 
-                        <SelectInput className="col-span-2" control={control} data={departments} name="department" label="Department" />
+                        <SelectInput className="sm:col-span-2" control={control} data={departments} name="department" label="Department" />
                     </>
                 )}
 
