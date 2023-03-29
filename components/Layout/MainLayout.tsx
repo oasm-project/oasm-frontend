@@ -4,14 +4,16 @@ import Navbar from "../Navbar";
 
 type Props = {
     children: React.ReactNode;
+    noNavbar?: boolean;
+    noFooter?: boolean;
 };
 
-function MainLayout({ children }: Props) {
+function MainLayout({ children, noFooter, noNavbar }: Props) {
     return (
         <div className="max-w-6xl mx-auto flex flex-col min-h-screen bg-gray-50 relative">
-            <Navbar />
+            {!noNavbar && <Navbar />}
             {children}
-            <Footer />
+            {!noFooter && <Footer />}
         </div>
     );
 }
