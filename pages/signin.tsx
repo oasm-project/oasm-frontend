@@ -1,4 +1,5 @@
 import { authLogin } from "@/api";
+import { Button } from "@/components";
 import { MainLayout } from "@/components/Layout";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
@@ -14,6 +15,7 @@ type FormInputs = {
 };
 
 const SignIn = () => {
+    const [loading, setLoading] = React.useState(false);
     const {
         register,
         handleSubmit,
@@ -24,6 +26,7 @@ const SignIn = () => {
     const router = useRouter();
 
     const onSubmit = async (data: FormInputs) => {
+        setLoading(true);
         try {
             const response = await authLogin({
                 email: data.email,
@@ -64,6 +67,8 @@ const SignIn = () => {
                     message: "Something went wrong"
                 });
             }
+        } finally {
+            setLoading(false);
         }
     };
     return (
@@ -101,9 +106,7 @@ const SignIn = () => {
                                 {errors.password && <p className="text-red-500">This field is required</p>}
                             </div>
 
-                            <button type="submit" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold">
-                                Sign in
-                            </button>
+                            <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold" />
 
                             {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
                         </form>

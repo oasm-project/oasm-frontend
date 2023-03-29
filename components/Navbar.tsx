@@ -1,6 +1,7 @@
 import { IUser, Role } from "@/types/user";
 import Link from "next/link";
 import React from "react";
+import Button from "./Button";
 
 type Props = {
     user?: IUser | null;
@@ -17,15 +18,11 @@ function Navbar({ user }: Props) {
                 {!user && (
                     <>
                         <Link href="/signin">
-                            <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-colors duration-300">
-                                Sign in
-                            </button>
+                            <Button text="Sign in" />
                         </Link>
 
                         <Link href="/signup">
-                            <button className="border border-green-700 bg-white text-green-700 hover:bg-green-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-colors duration-300">
-                                Sign up
-                            </button>
+                            <Button outline text="Sign up" />
                         </Link>
                     </>
                 )}
@@ -33,15 +30,11 @@ function Navbar({ user }: Props) {
                 {user && (
                     <>
                         <Link href={user.role === Role.admin ? "/admin" : "/dashboard"}>
-                            <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-colors duration-300">
-                                Dashboard
-                            </button>
+                            <Button text="Dashboard" />
                         </Link>
 
                         <Link href="/logout">
-                            <button className="border border-green-700 bg-white text-green-700 hover:bg-green-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-colors duration-300">
-                                Sign out
-                            </button>
+                            <Button outline text="Logout" />
                         </Link>
                     </>
                 )}
