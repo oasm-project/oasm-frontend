@@ -1,5 +1,9 @@
+import { authLogin } from "@/api";
 import { MainLayout } from "@/components/Layout";
+import { AxiosError } from "axios";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -12,10 +16,38 @@ const SignIn = () => {
     const {
         register,
         handleSubmit,
-        watch,
+        setError,
         formState: { errors }
     } = useForm<FormInputs>();
-    const onSubmit = (data: FormInputs) => console.log(data);
+
+    const router = useRouter();
+
+    const onSubmit = async (data: FormInputs) => {
+        try {
+            const response = await authLogin({
+                email: data.email,
+                password: data.password
+            });
+
+            console.log(response);
+
+            if (response.data.success) {
+                router.push("/admin");
+            }
+        } catch (error: AxiosError | any) {
+            if (error.response.status === 400) {
+                setError("root", {
+                    type: "manual",
+                    message: "Invalid email or password"
+                });
+            } else {
+                setError("root", {
+                    type: "manual",
+                    message: "Something went wrong"
+                });
+            }
+        }
+    };
     return (
         <MainLayout noNavbar noFooter>
             <div className="flex-1 flex justify-center items-center">
@@ -35,7 +67,7 @@ const SignIn = () => {
                                     placeholder="Enter your email"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent"
                                 />
-                                {errors.email && <span className="text-red-500">This field is required</span>}
+                                {errors.email && <p className="text-red-500">This field is required</p>}
                             </div>
 
                             <div className="space-y-2">
@@ -48,13 +80,31 @@ const SignIn = () => {
                                     {...register("password", { required: true })}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent"
                                 />
-                                {errors.password && <span className="text-red-500">This field is required</span>}
+                                {errors.password && <p className="text-red-500">This field is required</p>}
                             </div>
 
                             <button type="submit" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold">
                                 Sign in
                             </button>
+
+                            {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
                         </form>
+
+                        <div className="mt-5">
+                            <p className="text-gray-500">
+                                Don&apos;t have an account?{" "}
+                                <Link href="/signup" className="text-green-700 hover:underline">
+                                    Sign up
+                                </Link>
+                            </p>
+
+                            <p className="text-gray-500">
+                                Forgot password?{" "}
+                                <Link href="/forgot-password" className="text-green-700 hover:underline">
+                                    Reset password
+                                </Link>
+                            </p>
+                        </div>
                     </div>
 
                     <div className="w-full h-full justify-center items-center hidden lg:flex rounded-l-3xl overflow-hidden">
