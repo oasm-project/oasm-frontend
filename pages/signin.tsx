@@ -1,8 +1,10 @@
 import { authLogin } from "@/api";
+import { getSession } from "@/api/getSession";
 import { Button } from "@/components";
 import { MainLayout } from "@/components/Layout";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
+import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -140,3 +142,18 @@ const SignIn = () => {
 };
 
 export default SignIn;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+    const user = await getSession(ctx);
+
+    if (user) {
+        ctx.res.writeHead(302, { Location: "/" });
+        ctx.res.end();
+    }
+
+    return {
+        props: {
+            user: user || null
+        }
+    };
+}

@@ -23,8 +23,8 @@ const Home = ({ user }: Props) => {
 
                         <p className="mt-4 text-lg text-gray-500 text-center md:text-left">Easily manage your assignments and submit them online. Get your assignments with ease 🤓</p>
 
-                        <Link href="/signup">
-                            <button className="btn mt-4 px-6 py-3 bg-green-700 text-white rounded-md font-semibold">GET STARTED</button>
+                        <Link href={user ? "/admin" : "/signup"}>
+                            <button className="btn mt-4 px-6 py-3 bg-green-700 text-white rounded-md font-semibold">{user ? "GO-TO DASHBOARD" : "GET STARTED"}</button>
                         </Link>
                     </div>
 
