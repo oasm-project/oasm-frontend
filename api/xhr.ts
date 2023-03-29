@@ -7,7 +7,12 @@ const baseURL = process.env.BACKEND_BASE_URL;
 
 const config: AxiosRequestConfig = {
     baseURL,
-    timeout: 60000
+    timeout: 60000,
+    headers: {
+        "Content-Type": "application/json",
+        "Allow-Control-Allow-Origin": process.env.BASE_URL || "http://localhost:3000",
+        "Access-Control-Allow-Credentials": "true"
+    }
 };
 
 // Create new axios instance
@@ -19,6 +24,7 @@ const refreshAccessToken = async () => {
         return;
     }
     if (!hasCookie("access_token") && hasCookie("refresh_token")) {
+        console.log("refreshing access token");
         // const refreshToken: any = await jwtDecode(getCookie("refresh_token") as string);
 
         // Refresh access token

@@ -1,6 +1,5 @@
 import { authLogin } from "@/api";
 import { MainLayout } from "@/components/Layout";
-import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from "@/utils/auth";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
 import Image from "next/image";
@@ -39,13 +38,15 @@ const SignIn = () => {
                     refreshToken: string;
                 };
 
+                console.log(process.env.NODE_ENV);
+
                 setCookie("access_token", accessToken, {
-                    maxAge: ACCESS_TOKEN_MAX_AGE,
+                    maxAge: 60 * 60, // 1 hour
                     path: "/"
                 });
 
                 setCookie("refresh_token", refreshToken, {
-                    maxAge: REFRESH_TOKEN_MAX_AGE,
+                    maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
                     path: "/"
                 });
 

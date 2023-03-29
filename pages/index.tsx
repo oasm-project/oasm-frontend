@@ -1,10 +1,18 @@
 import { MainLayout } from "@/components/Layout";
+import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import React from "react";
+import cookie from "cookie";
+import { getSession } from "@/api/getSession";
+import { IUser } from "@/types/user";
 
-function Home() {
+type Props = {
+    user: IUser | null;
+};
+
+const Home = ({ user }: Props) => {
     return (
-        <MainLayout>
+        <MainLayout user={user}>
             <div className="px-5 md:px-10 pt-36 flex-1">
                 <div className="grid grid-cols-2 gap-10">
                     <div className="space-y-10 flex flex-col justify-center items-start">
@@ -26,6 +34,17 @@ function Home() {
             </div>
         </MainLayout>
     );
-}
+};
 
 export default Home;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+    // TODO: Check if user is logged in, if yes, redirect to dashboard
+    const user = await getSession(ctx);
+
+    return {
+        props: {
+            user: user || null
+        }
+    };
+}
