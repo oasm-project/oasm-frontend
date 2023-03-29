@@ -7,13 +7,7 @@ const baseURL = process.env.BACKEND_BASE_URL;
 
 const config: AxiosRequestConfig = {
     baseURL,
-    timeout: 60000,
-    headers: {
-        "Content-Type": "application/json",
-        "Allow-Control-Allow-Origin": process.env.BASE_URL || "http://localhost:3000",
-        "Access-Control-Allow-Credentials": "true"
-    },
-    withCredentials: true
+    timeout: 60000
 };
 
 // Create new axios instance

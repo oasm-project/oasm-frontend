@@ -1,6 +1,8 @@
 import { authLogin } from "@/api";
 import { MainLayout } from "@/components/Layout";
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from "@/utils/auth";
 import { AxiosError } from "axios";
+import { setCookie } from "cookies-next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -32,10 +34,25 @@ const SignIn = () => {
             console.log(response);
 
             if (response.data.success) {
+                const { accessToken, refreshToken } = response.data.data.token as {
+                    accessToken: string;
+                    refreshToken: string;
+                };
+
+                setCookie("access_token", accessToken, {
+                    maxAge: ACCESS_TOKEN_MAX_AGE,
+                    path: "/"
+                });
+
+                setCookie("refresh_token", refreshToken, {
+                    maxAge: REFRESH_TOKEN_MAX_AGE,
+                    path: "/"
+                });
+
                 router.push("/admin");
             }
         } catch (error: AxiosError | any) {
-            if (error.response.status === 400) {
+            if (error.response?.status === 400) {
                 setError("root", {
                     type: "manual",
                     message: "Invalid email or password"
