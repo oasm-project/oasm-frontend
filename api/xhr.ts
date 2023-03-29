@@ -29,7 +29,7 @@ const refreshAccessToken = async () => {
 
         // Refresh access token
         try {
-            await fetch(`${baseURL}/auth/refresh-access-token`, {
+            const response = await fetch(`${baseURL}/auth/refresh-access-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -39,6 +39,15 @@ const refreshAccessToken = async () => {
                 }),
                 credentials: "include"
             });
+
+            const data = await response.json();
+
+            if (data.data.accessToken) {
+                setCookie("access_token", data.data.accessToken, {
+                    maxAge: 60 * 60, // 1 hour
+                    path: "/"
+                });
+            }
         } catch (error) {
             console.log(error);
             return;
@@ -79,7 +88,7 @@ $http.interceptors.response.use(
             deleteCookie("access_token");
 
             // Redirect to login page
-            window.location.href = "/auth/login";
+            window.location.href = "/signin";
         }
         return Promise.reject(error);
     }

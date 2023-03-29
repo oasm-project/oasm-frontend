@@ -1,11 +1,10 @@
 import { authLogin } from "@/api";
 import { getSession } from "@/api/getSession";
 import { Button, TextInput } from "@/components";
-import { MainLayout } from "@/components/Layout";
+import { AuthLayout } from "@/components/Layout";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -74,66 +73,54 @@ const SignIn = () => {
         }
     };
     return (
-        <MainLayout noNavbar noFooter>
-            <div className="flex-1 flex justify-center items-center">
-                <div className="grid grid-cols-1 lg:grid-cols-2 w-full h-screen">
-                    <div className="w-full flex flex-col justify-center items-center px-5 md:px-10">
-                        <h1 className="text-5xl font-bold leading-tight text-center">Welcome Back!</h1>
-                        <p className="text-center mt-4 text-lg text-gray-500">Sign in to your account to continue</p>
+        <AuthLayout>
+            <h1 className="text-5xl font-bold leading-tight text-center">Welcome Back!</h1>
+            <p className="text-center mt-4 text-lg text-gray-500">Sign in to your account to continue</p>
 
-                        <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-5">
-                            <TextInput
-                                control={control}
-                                name="email"
-                                type="email"
-                                label="Email"
-                                placeholder="Enter your email"
-                                rules={{
-                                    required: "Email is required"
-                                }}
-                            />
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-5">
+                <TextInput
+                    control={control}
+                    name="email"
+                    type="email"
+                    label="Email"
+                    placeholder="Enter your email"
+                    rules={{
+                        required: "Email is required"
+                    }}
+                />
 
-                            <TextInput
-                                control={control}
-                                name="password"
-                                type="password"
-                                label="Password"
-                                placeholder="Enter your password"
-                                rules={{
-                                    required: "Password is required"
-                                }}
-                            />
+                <TextInput
+                    control={control}
+                    name="password"
+                    type="password"
+                    label="Password"
+                    placeholder="Enter your password"
+                    rules={{
+                        required: "Password is required"
+                    }}
+                />
 
-                            <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold" />
+                <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold" />
 
-                            {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
-                        </form>
+                {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
+            </form>
 
-                        <div className="mt-5">
-                            <p className="text-gray-500">
-                                Don&apos;t have an account?{" "}
-                                <Link href="/signup" className="text-green-700 hover:underline">
-                                    Sign up
-                                </Link>
-                            </p>
+            <div className="mt-5">
+                <p className="text-gray-500">
+                    Don&apos;t have an account?{" "}
+                    <Link href="/signup" className="text-green-700 hover:underline">
+                        Sign up
+                    </Link>
+                </p>
 
-                            <p className="text-gray-500">
-                                Forgot password?{" "}
-                                <Link href="/forgot-password" className="text-green-700 hover:underline">
-                                    Reset password
-                                </Link>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="w-full h-full justify-center items-center hidden lg:flex rounded-l-3xl overflow-hidden">
-                        <div className="relative w-full h-full">
-                            <Image className="object-cover" src="/assets/images/signin.jpg" alt="hero image" fill />
-                        </div>
-                    </div>
-                </div>
+                <p className="text-gray-500">
+                    Forgot password?{" "}
+                    <Link href="/forgot-password" className="text-green-700 hover:underline">
+                        Reset password
+                    </Link>
+                </p>
             </div>
-        </MainLayout>
+        </AuthLayout>
     );
 };
 
