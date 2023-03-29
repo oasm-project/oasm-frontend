@@ -40,14 +40,20 @@ const SignUp = ({ departments }: Props) => {
         formState: { errors },
         watch,
         setValue
-    } = useForm<FormInputs>();
+    } = useForm<FormInputs>({
+        defaultValues: {
+            registerAs: "student",
+            level: "100",
+            department: departments[0].value
+        }
+    });
 
     const registerAs = watch("registerAs");
 
     const onSubmit = async (data: FormInputs) => {
         setLoading(true);
         try {
-            const response = await authRegister(data);
+            const response = await authRegister({ ...data, departmentId: data.department });
 
             console.log(response);
 
@@ -75,8 +81,10 @@ const SignUp = ({ departments }: Props) => {
             if (error.response?.status === 400) {
                 setError("root", {
                     type: "manual",
-                    message: "Invalid email or password"
+                    message: error.message || "Something went wrong"
                 });
+
+                console.log(error.response.data);
             } else {
                 setError("root", {
                     type: "manual",
