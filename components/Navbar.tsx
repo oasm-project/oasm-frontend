@@ -9,7 +9,7 @@ type Props = {
 
 function Navbar({ user }: Props) {
     return (
-        <nav className="flex justify-between items-center py-4 px-5 md:px-10 shadow-sm bg-white absolute top-0 w-full mx-auto z-10">
+        <nav className="flex justify-between items-center py-4 px-5 md:px-10 shadow-sm bg-white sticky top-0 w-full mx-auto z-10">
             <Link href="/">
                 <h1 className="text-3xl font-bold">OASM</h1>
             </Link>
