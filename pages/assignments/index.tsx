@@ -1,5 +1,5 @@
 import { getSession } from "@/api/getSession";
-import { IUser } from "@/types/user";
+import { IUser, Role } from "@/types/user";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
 
@@ -7,31 +7,23 @@ type Props = {
     user: IUser | null;
 };
 
-function AdminPage({ user }: Props) {
+function AssignmentsPage({ user }: Props) {
     return (
         <div className="flex justify-center items-center h-screen">
-            <h1 className="text-3xl font-bold">AdminPage</h1>
-
-            <div className="flex flex-col space-y-2">
-                <p>Username: {user?.name}</p>
-
-                <p>Role: {user?.role}</p>
-
-                <p>Email: {user?.email}</p>
-            </div>
+            <h1>Assignments</h1>
         </div>
     );
 }
 
-export default AdminPage;
+export default AssignmentsPage;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     // TODO: Check if user is logged in, if yes, redirect to dashboard
     const user = await getSession(ctx, {
-        redirect: "/signin?redirect=/admin"
+        redirect: "/signin?redirect=/assignments"
     });
 
-    if (user?.role !== "admin") {
+    if (user?.role !== Role.student) {
         ctx.res.writeHead(302, { Location: "/" });
     }
 
