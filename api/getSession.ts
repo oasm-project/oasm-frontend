@@ -59,6 +59,11 @@ export const getSession = async (ctx: GetServerSidePropsContext<ParsedUrlQuery, 
 
             const data = await response.json();
 
+            if (data.message === "Unauthorized access: Please verify email address") {
+                res.writeHead(302, { Location: "/request-email-verification" });
+                res.end();
+            }
+
             return data.data as IUser;
         } catch (error) {
             console.log(error);

@@ -96,18 +96,3 @@ const RequestEmailVerification = () => {
 };
 
 export default RequestEmailVerification;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-    const user = await getSession(ctx);
-
-    if (user) {
-        ctx.res.writeHead(302, { Location: "/" });
-        ctx.res.end();
-    }
-
-    return {
-        props: {
-            user: user || null
-        }
-    };
-}
