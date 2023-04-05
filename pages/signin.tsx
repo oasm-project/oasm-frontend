@@ -2,6 +2,7 @@ import { authLogin } from "@/api";
 import { getSession } from "@/api/getSession";
 import { Button, TextInput } from "@/components";
 import { AuthLayout } from "@/components/Layout";
+import { Role } from "@/types/user";
 import { AxiosError } from "axios";
 import { setCookie } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
@@ -34,13 +35,12 @@ const SignIn = () => {
                 password: data.password
             });
 
-            console.log(response);
-
             if (response.data.success) {
                 const { accessToken, refreshToken } = response.data.data.token as {
                     accessToken: string;
                     refreshToken: string;
                 };
+                const { role } = response.data.data.user;
 
                 console.log(process.env.NODE_ENV);
 
@@ -54,7 +54,19 @@ const SignIn = () => {
                     path: "/"
                 });
 
-                router.push("/admin");
+                if (router.query.redirect) {
+                    router.push(router.query.redirect as string);
+                } else {
+                    if (role === Role.admin) {
+                        router.push("/admin");
+                    } else if (role === Role.lecturer) {
+                        router.push("/dashboard");
+                    } else if (role === Role.student) {
+                        router.push("/assignments");
+                    } else {
+                        router.push("/");
+                    }
+                }
             }
         } catch (error: AxiosError | any) {
             if (error.response?.status === 400) {

@@ -4,6 +4,12 @@ export enum Role {
     "admin" = "admin"
 }
 
+export const UserRole = {
+    student: [Role.student, Role.lecturer, Role.admin],
+    lecturer: [Role.lecturer, Role.admin],
+    admin: [Role.admin]
+};
+
 export interface IDepartment {
     name: string;
     createdAt: Date;
