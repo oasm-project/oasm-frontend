@@ -32,7 +32,7 @@ const ForgotPassword = () => {
     const onSubmit = async (data: FormInputs) => {
         setLoading(true);
         try {
-            const response = await authRequestPasswordReset(`email=${data.email}`);
+            const response = await authRequestPasswordReset(`email=${encodeURIComponent(data.email)}`);
 
             if (response.data.success) {
                 modalRef.current?.open();

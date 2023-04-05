@@ -69,5 +69,7 @@ export const getSession = async (ctx: GetServerSidePropsContext<ParsedUrlQuery, 
             res.writeHead(302, { Location: options.redirect });
             res.end();
         }
+
+        return null;
     }
 };

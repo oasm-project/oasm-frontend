@@ -1,5 +1,5 @@
 import { getSession } from "@/api/getSession";
-import { IUser, Role } from "@/types/user";
+import { IUser, Role, UserRole } from "@/types/user";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
 
@@ -23,7 +23,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         redirect: "/signin?redirect=/assignments"
     });
 
-    if (user?.role !== Role.student) {
+    console.log(user);
+
+    if (user && !UserRole.student.includes(user.role)) {
         ctx.res.writeHead(302, { Location: "/" });
     }
 

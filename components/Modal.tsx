@@ -32,7 +32,7 @@ const Modal = React.forwardRef<ModalHandle, Props>((props, ref) => {
 
     React.useImperativeHandle(ref, () => ({
         open: () => openModal(),
-        close: () => closeModal
+        close: () => closeModal()
     }));
 
     const { className, overlayClassName, noCancelButton, children, onModalClose } = props;
