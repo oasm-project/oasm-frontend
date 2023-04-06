@@ -10,7 +10,7 @@ type Props = {
 const AdminDashboardLayout = ({ user, children }: Props) => {
     return (
         <React.Fragment>
-            <div className="grid grid-cols-10 h-screen">
+            <div className="hidden md:grid grid-cols-10 h-screen">
                 <Sidebar user={user} />
                 <div className="col-span-8 p-5">{children}</div>
             </div>
