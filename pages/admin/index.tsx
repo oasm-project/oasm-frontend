@@ -1,4 +1,5 @@
 import { getSession } from "@/api/getSession";
+import { AdminDashboardLayout } from "@/components/Layout";
 import { IUser } from "@/types/user";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
@@ -9,17 +10,11 @@ type Props = {
 
 function AdminPage({ user }: Props) {
     return (
-        <div className="flex justify-center items-center h-screen">
-            <h1 className="text-3xl font-bold">AdminPage</h1>
+        <AdminDashboardLayout user={user}>
+            <h1>Hello, {user?.name}</h1>
 
-            <div className="flex flex-col space-y-2">
-                <p>Username: {user?.name}</p>
-
-                <p>Role: {user?.role}</p>
-
-                <p>Email: {user?.email}</p>
-            </div>
-        </div>
+            <p>Admin Dashboard</p>
+        </AdminDashboardLayout>
     );
 }
 
