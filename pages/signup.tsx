@@ -60,21 +60,6 @@ const SignUp = ({ departments }: Props) => {
             const response = await authRegister({ ...data, departmentId: data.department });
 
             if (response.data.success) {
-                const { accessToken, refreshToken } = response.data.data.token as {
-                    accessToken: string;
-                    refreshToken: string;
-                };
-
-                setCookie("access_token", accessToken, {
-                    maxAge: 60 * 60, // 1 hour
-                    path: "/"
-                });
-
-                setCookie("refresh_token", refreshToken, {
-                    maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
-                    path: "/"
-                });
-
                 modalRef.current?.open();
             }
         } catch (error: AxiosError | any) {

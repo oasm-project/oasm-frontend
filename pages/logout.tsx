@@ -1,5 +1,5 @@
 import { authLogout } from "@/api";
-import { deleteCookie, getCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -16,9 +16,6 @@ function Logout({}: Props) {
                 await authLogout({
                     refreshToken: getCookie("refresh_token")
                 });
-
-                deleteCookie("access_token");
-                deleteCookie("refresh_token");
 
                 router.push("/");
             } catch (error) {

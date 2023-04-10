@@ -1,26 +1,28 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from "cookies-next";
-import jwtDecode from "jwt-decode";
-import cookies from "next-cookies";
+import { deleteCookie, getCookie, hasCookie } from "cookies-next";
 
-const baseURL = process.env.BACKEND_BASE_URL;
+export const baseURL = process.env.BACKEND_BASE_URL || "http://localhost:4000";
+export const frontendURL = process.env.BASE_URL || "http://localhost:3000";
 
 const config: AxiosRequestConfig = {
     baseURL,
     timeout: 60000,
     headers: {
         "Content-Type": "application/json",
-        "Allow-Control-Allow-Origin": process.env.BASE_URL || "http://localhost:3000",
+        "Allow-Control-Allow-Origin": frontendURL,
         "Access-Control-Allow-Credentials": "true"
-    }
+    },
+    withCredentials: true
 };
 
 // Create new axios instance
 const $http = axios.create(config);
 
 const refreshAccessToken = async () => {
-    if (!hasCookie("refresh_token")) {
-        // redirect to login page
+    if (typeof window !== "undefined" && !hasCookie("refresh_token") && window.location.pathname !== "/signin") {
+        // redirect to signin page
+        deleteCookie("access_token");
+        window.location.href = "/signin";
         return;
     }
     if (!hasCookie("access_token") && hasCookie("refresh_token")) {
@@ -29,7 +31,7 @@ const refreshAccessToken = async () => {
 
         // Refresh access token
         try {
-            const response = await fetch(`${baseURL}/auth/refresh-access-token`, {
+            await fetch(`${baseURL}/auth/refresh-access-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -39,15 +41,6 @@ const refreshAccessToken = async () => {
                 }),
                 credentials: "include"
             });
-
-            const data = await response.json();
-
-            if (data.data.accessToken) {
-                setCookie("access_token", data.data.accessToken, {
-                    maxAge: 60 * 60, // 1 hour
-                    path: "/"
-                });
-            }
         } catch (error) {
             console.log(error);
             return;
@@ -83,11 +76,11 @@ $http.interceptors.response.use(
         return response;
     },
     async (error: any) => {
-        if (error.response.status === 401 && error.response.data.message === "Unauthorized access: Token not found") {
+        if (typeof window !== "undefined" && error.response.status === 401 && error.response.data.message === "Unauthorized access: Token not found") {
             // Delete cookies
             deleteCookie("access_token");
 
-            // Redirect to login page
+            // Redirect to signin page
             window.location.href = "/signin";
         }
         return Promise.reject(error);
