@@ -24,3 +24,12 @@
 .ReactModal__Overlay--before-close {
     opacity: 0;
 }
+
+#nprogress .bar {
+    background-color: #047857 !important;
+}
+
+#nprogress .spinner {
+    border-top-color: #047857 !important;
+    border-left-color: #047857 !important;
+}
