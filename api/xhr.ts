@@ -18,8 +18,10 @@ const config: AxiosRequestConfig = {
 // Create new axios instance
 const $http = axios.create(config);
 
+const AUTH_PATHS = ["/signin", "/signup", "/forgot-password", "/reset-password", "/email-verification", "/request-email-verification"];
+
 const refreshAccessToken = async () => {
-    if (typeof window !== "undefined" && !hasCookie("refresh_token") && window.location.pathname !== "/signin" && window.location.pathname !== "/signup") {
+    if (typeof window !== "undefined" && !hasCookie("refresh_token") && !AUTH_PATHS.includes(window.location.pathname)) {
         // redirect to signin page
         deleteCookie("access_token");
         window.location.href = "/signin";

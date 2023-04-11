@@ -84,6 +84,7 @@ function LecturersPage({ user, lecturers }: Props) {
                         <tr>
                             <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">S/N</th>
                             <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Lecturer Name</th>
+                            <th className="py-3 px-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">Email Address</th>
                             <th className="py-3 px-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                             <th className="py-3 px-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">Verified</th>
                         </tr>
@@ -96,6 +97,7 @@ function LecturersPage({ user, lecturers }: Props) {
                                     <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{i + 1}</td>
                                     <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{`${lecturer.name.slice(0, 1).toUpperCase()}${lecturer.name.slice(1).toLowerCase()}
                                     `}</td>
+                                    <td className="py-3 px-4 text-center text-sm text-gray-500">{lecturer.email}</td>
                                     <td className="py-3 px-4 text-center text-sm text-gray-500">{format(new Date(lecturer.createdAt), "dd/MM/yyyy")}</td>
                                     <td className="py-3 px-4 text-center text-sm text-gray-500">
                                         <label className="relative inline-flex items-center cursor-pointer">
