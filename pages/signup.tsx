@@ -66,7 +66,7 @@ const SignUp = ({ departments }: Props) => {
             if (error.response?.status === 400) {
                 setError("root", {
                     type: "manual",
-                    message: error.message || "Something went wrong"
+                    message: error.response.data.message || "Something went wrong"
                 });
 
                 console.log(error.response.data);
@@ -189,7 +189,7 @@ const SignUp = ({ departments }: Props) => {
 
                 {/* Button */}
                 <Button loading={loading} type="submit" text="Sign up" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2" />
-                {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
+                {errors.root && <p className="text-red-500 text-center sm:col-span-2">{errors.root.message}</p>}
             </form>
 
             <div className="mt-8">

@@ -19,7 +19,7 @@ const config: AxiosRequestConfig = {
 const $http = axios.create(config);
 
 const refreshAccessToken = async () => {
-    if (typeof window !== "undefined" && !hasCookie("refresh_token") && window.location.pathname !== "/signin") {
+    if (typeof window !== "undefined" && !hasCookie("refresh_token") && window.location.pathname !== "/signin" && window.location.pathname !== "/signup") {
         // redirect to signin page
         deleteCookie("access_token");
         window.location.href = "/signin";
