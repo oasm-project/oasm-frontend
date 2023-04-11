@@ -1,4 +1,4 @@
-import { departmentsCreate, departmentsGetAll } from "@/api";
+import { departmentsCreate, departmentsDelete, departmentsGetAll, departmentsUpdate } from "@/api";
 import { getSession } from "@/api/getSession";
 import { AdminDashboardLayout } from "@/components/Layout";
 import { IDepartment } from "@/types/department";
@@ -23,10 +23,19 @@ type FormInputs = {
     departmentName: string;
 };
 
+enum ActionType {
+    CREATE = "create",
+    EDIT = "edit",
+    DELETE = "delete"
+}
+
 function Departments({ user, departments }: Props) {
     const [searchString, setSearchString] = React.useState<string>("");
     const [loading, setLoading] = React.useState(false);
     const [departmentsData, setDepartmentsData] = React.useState<IDepartment[]>(departments || []);
+
+    const [actionType, setActionType] = React.useState<ActionType>(ActionType.CREATE);
+    const [selectedDepartment, setSelectedDepartment] = React.useState<IDepartment | null>(null);
 
     const filteredDepartments = React.useMemo(() => {
         if (!searchString) return departmentsData;
@@ -45,8 +54,16 @@ function Departments({ user, departments }: Props) {
         handleSubmit,
         setError,
         formState: { errors },
-        setValue
+        setValue,
+        watch
     } = useForm<FormInputs>();
+    const departmentName = watch("departmentName");
+
+    React.useEffect(() => {
+        if (actionType === ActionType.EDIT) {
+            setValue("departmentName", selectedDepartment?.name || "");
+        }
+    }, [actionType, selectedDepartment, setValue]);
 
     const onSubmit = async (data: FormInputs) => {
         setLoading(true);
@@ -54,15 +71,48 @@ function Departments({ user, departments }: Props) {
             const response = await departmentsCreate({ name: data.departmentName });
 
             if (response.data.success) {
-                modalRef.current?.close();
                 setValue("departmentName", "");
                 setDepartmentsData((prev) => [...prev, response.data.data]);
+                modalRef.current?.close();
             }
         } catch (error: AxiosError | any) {
             setError("root", {
                 type: "manual",
                 message: error.response.data.message || error.message || "Something went wrong"
             });
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // TODO: Fix Default Value
+    const handleEdit = async (id: string, name: string) => {
+        setLoading(true);
+        try {
+            const response = await departmentsUpdate(id, { name });
+
+            if (response.data.success) {
+                setDepartmentsData((prev) => prev.map((department) => (department._id === id ? { ...department, name } : department)));
+                modalRef.current?.close();
+            }
+        } catch (error: AxiosError | any) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        setLoading(true);
+        try {
+            const response = await departmentsDelete(id);
+
+            if (response.data.success) {
+                setDepartmentsData((prev) => prev.filter((department) => department._id !== id));
+                modalRef.current?.close();
+            }
+        } catch (error: AxiosError | any) {
             console.log(error);
         } finally {
             setLoading(false);
@@ -102,7 +152,10 @@ function Departments({ user, departments }: Props) {
 
                     <button
                         type="button"
-                        onClick={() => modalRef.current?.open()}
+                        onClick={() => {
+                            setActionType(ActionType.CREATE);
+                            modalRef.current?.open();
+                        }}
                         className="flex items-center justify-center w-10 h-10 text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-700 dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-green-700"
                     >
                         <HiPlus className="w-5 h-5" />
@@ -128,12 +181,26 @@ function Departments({ user, departments }: Props) {
                                 <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{department.name}</td>
                                 <td className="py-3 px-4 text-center text-sm text-gray-500">{format(new Date(department.createdAt), "dd/MM/yyyy")}</td>
                                 <td className="py-3 px-4 text-center text-sm text-gray-500">
-                                    <button className="text-green-600 hover:text-green-900">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedDepartment(department);
+                                            setActionType(ActionType.EDIT);
+                                            modalRef.current?.open();
+                                        }}
+                                        className="text-green-600 hover:text-green-900"
+                                    >
                                         <AiOutlineEdit className="w-5 h-5" />
                                     </button>
                                 </td>
                                 <td className="py-3 px-4 text text-sm text-gray-500 text-center">
-                                    <button className="text-red-600 hover:text-red-900">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedDepartment(department);
+                                            setActionType(ActionType.DELETE);
+                                            modalRef.current?.open();
+                                        }}
+                                        className="text-red-600 hover:text-red-900"
+                                    >
                                         <AiOutlineDelete className="w-5 h-5" />
                                     </button>
                                 </td>
@@ -145,23 +212,61 @@ function Departments({ user, departments }: Props) {
 
             <Modal noCancelButton ref={modalRef}>
                 <div className="flex flex-col items-center justify-center max-w-[400px] p-5">
-                    <h1 className="text-2xl font-bold text-center">Add Department</h1>
+                    <h1 className="text-2xl font-bold text-center">
+                        {actionType === ActionType.CREATE ? "Create Department" : actionType === ActionType.EDIT ? "Edit Department" : "Delete Department"}
+                    </h1>
 
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full mt-5 space-y-5">
-                        <TextInput
-                            control={control}
-                            name="departmentName"
-                            type="text"
-                            label="Department Name"
-                            placeholder="Enter Department Name"
-                            rules={{
-                                required: "Department Name is required"
+                    {/* {actionType === ActionType.CREATE || actionType === ActionType.EDIT && ( */}
+                    {(actionType === ActionType.CREATE || actionType === ActionType.EDIT) && (
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (actionType === ActionType.CREATE) {
+                                    handleSubmit(onSubmit)();
+                                } else {
+                                    handleEdit(selectedDepartment?._id || "", departmentName);
+                                }
                             }}
-                        />
+                            className="flex flex-col w-full mt-5 space-y-5"
+                        >
+                            <TextInput
+                                control={control}
+                                name="departmentName"
+                                type="text"
+                                label="Department Name"
+                                placeholder="Enter Department Name"
+                                defaultValue={selectedDepartment?.name}
+                                rules={{
+                                    required: "Department Name is required"
+                                }}
+                            />
 
-                        <Button loading={loading} type="submit" text="Create" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2" />
-                        {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
-                    </form>
+                            <Button
+                                loading={loading}
+                                type="submit"
+                                text={actionType === ActionType.CREATE ? "Create Department" : "Update Department"}
+                                className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2"
+                            />
+                            {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
+                        </form>
+                    )}
+
+                    {actionType === ActionType.DELETE && (
+                        <div className="flex flex-col items-center justify-center w-full mt-5 space-y-5">
+                            <p className="text-center">Are you sure you want to delete this department?</p>
+                            <div className="flex items-center justify-center w-full space-x-5">
+                                <Button
+                                    title="This feature is not yet available"
+                                    loading={loading}
+                                    onClick={() => handleDelete(selectedDepartment?._id || "")}
+                                    text="Delete"
+                                    className="w-full px-6 py-3 bg-red-700 text-white rounded-md font-semibold sm:col-span-2"
+                                    disabled
+                                />
+                                <Button onClick={() => modalRef.current?.close()} text="Cancel" className="w-full px-6 py-3 bg-gray-700 text-white rounded-md font-semibold sm:col-span-2" />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </Modal>
         </AdminDashboardLayout>
