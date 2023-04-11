@@ -175,37 +175,40 @@ function Departments({ user, departments }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredDepartments.map((department, i) => (
-                            <tr key={department._id} className="border-b border-gray-200">
-                                <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{i + 1}</td>
-                                <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{department.name}</td>
-                                <td className="py-3 px-4 text-center text-sm text-gray-500">{format(new Date(department.createdAt), "dd/MM/yyyy")}</td>
-                                <td className="py-3 px-4 text-center text-sm text-gray-500">
-                                    <button
-                                        onClick={() => {
-                                            setSelectedDepartment(department);
-                                            setActionType(ActionType.EDIT);
-                                            modalRef.current?.open();
-                                        }}
-                                        className="text-green-600 hover:text-green-900"
-                                    >
-                                        <AiOutlineEdit className="w-5 h-5" />
-                                    </button>
-                                </td>
-                                <td className="py-3 px-4 text text-sm text-gray-500 text-center">
-                                    <button
-                                        onClick={() => {
-                                            setSelectedDepartment(department);
-                                            setActionType(ActionType.DELETE);
-                                            modalRef.current?.open();
-                                        }}
-                                        className="text-red-600 hover:text-red-900"
-                                    >
-                                        <AiOutlineDelete className="w-5 h-5" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {filteredDepartments
+                            .sort((a, b) => (a.name > b.name ? 1 : -1))
+                            .map((department, i) => (
+                                <tr key={department._id} className="border-b border-gray-200">
+                                    <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{i + 1}</td>
+                                    <td className="py-3 px-4 text-left text-sm font-medium text-gray-900">{`${department.name.slice(0, 1).toUpperCase()}${department.name.slice(1).toLowerCase()}
+                                    `}</td>
+                                    <td className="py-3 px-4 text-center text-sm text-gray-500">{format(new Date(department.createdAt), "dd/MM/yyyy")}</td>
+                                    <td className="py-3 px-4 text-center text-sm text-gray-500">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedDepartment(department);
+                                                setActionType(ActionType.EDIT);
+                                                modalRef.current?.open();
+                                            }}
+                                            className="text-green-600 hover:text-green-900"
+                                        >
+                                            <AiOutlineEdit className="w-5 h-5" />
+                                        </button>
+                                    </td>
+                                    <td className="py-3 px-4 text text-sm text-gray-500 text-center">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedDepartment(department);
+                                                setActionType(ActionType.DELETE);
+                                                modalRef.current?.open();
+                                            }}
+                                            className="text-red-600 hover:text-red-900"
+                                        >
+                                            <AiOutlineDelete className="w-5 h-5" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
