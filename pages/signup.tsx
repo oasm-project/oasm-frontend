@@ -47,7 +47,7 @@ const SignUp = ({ departments }: Props) => {
         defaultValues: {
             registerAs: "student",
             level: "100",
-            department: departments[0].value
+            department: departments[0]?.value
         }
     });
 
@@ -60,28 +60,13 @@ const SignUp = ({ departments }: Props) => {
             const response = await authRegister({ ...data, departmentId: data.department });
 
             if (response.data.success) {
-                const { accessToken, refreshToken } = response.data.data.token as {
-                    accessToken: string;
-                    refreshToken: string;
-                };
-
-                setCookie("access_token", accessToken, {
-                    maxAge: 60 * 60, // 1 hour
-                    path: "/"
-                });
-
-                setCookie("refresh_token", refreshToken, {
-                    maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
-                    path: "/"
-                });
-
                 modalRef.current?.open();
             }
         } catch (error: AxiosError | any) {
             if (error.response?.status === 400) {
                 setError("root", {
                     type: "manual",
-                    message: error.message || "Something went wrong"
+                    message: error.response.data.message || "Something went wrong"
                 });
 
                 console.log(error.response.data);
@@ -204,7 +189,7 @@ const SignUp = ({ departments }: Props) => {
 
                 {/* Button */}
                 <Button loading={loading} type="submit" text="Sign up" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2" />
-                {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
+                {errors.root && <p className="text-red-500 text-center sm:col-span-2">{errors.root.message}</p>}
             </form>
 
             <div className="mt-8">

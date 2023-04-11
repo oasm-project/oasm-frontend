@@ -36,23 +36,10 @@ const SignIn = () => {
             });
 
             if (response.data.success) {
-                const { accessToken, refreshToken } = response.data.data.token as {
-                    accessToken: string;
-                    refreshToken: string;
-                };
                 const { role } = response.data.data.user;
+                console.log("user role", role);
 
                 console.log(process.env.NODE_ENV);
-
-                setCookie("access_token", accessToken, {
-                    maxAge: 60 * 60, // 1 hour
-                    path: "/"
-                });
-
-                setCookie("refresh_token", refreshToken, {
-                    maxAge: 60 * 60 * 24 * 7 * 4, // 4 weeks
-                    path: "/"
-                });
 
                 if (router.query.redirect) {
                     router.push(router.query.redirect as string);

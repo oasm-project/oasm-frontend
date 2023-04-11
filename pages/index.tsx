@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import cookie from "cookie";
 import { getSession } from "@/api/getSession";
-import { IUser } from "@/types/user";
+import { IUser, Role } from "@/types/user";
 import Link from "next/link";
 
 type Props = {
@@ -23,7 +23,7 @@ const Home = ({ user }: Props) => {
 
                         <p className="mt-4 text-lg text-gray-500 text-center md:text-left">Easily manage your assignments and submit them online. Get your assignments with ease 🤓</p>
 
-                        <Link href={user ? "/admin" : "/signup"}>
+                        <Link href={user ? (user.role === Role.admin ? "/admin" : Role.lecturer ? "/dashboard" : "/assignments") : "/signup"}>
                             <button className="btn mt-4 px-6 py-3 bg-green-700 text-white rounded-md font-semibold">{user ? "GO-TO DASHBOARD" : "GET STARTED"}</button>
                         </Link>
                     </div>

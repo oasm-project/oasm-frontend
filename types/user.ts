@@ -1,3 +1,5 @@
+import { IDepartment } from "./department";
+
 export enum Role {
     "student" = "student",
     "lecturer" = "lecturer",
@@ -10,13 +12,8 @@ export const UserRole = {
     admin: [Role.admin]
 };
 
-export interface IDepartment {
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 export interface IUser {
+    _id: string;
     name: string;
     email: string;
     password: string;

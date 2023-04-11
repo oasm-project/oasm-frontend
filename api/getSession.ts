@@ -24,16 +24,17 @@ export const getSession = async (ctx: GetServerSidePropsContext<ParsedUrlQuery, 
 
                 const data = await response.json();
 
-                if (data.data.accessToken) {
-                    res.setHeader(
-                        "Set-Cookie",
-                        cookie.serialize("access_token", data.data.accessToken, {
-                            maxAge: 60 * 60, // 1 hour
-                            path: "/"
-                        })
-                    );
+                // get set-cookie header
+                const setCookie = response.headers.get("set-cookie");
 
-                    cookies["access_token"] = data.data.accessToken;
+                // set cookie
+                if (setCookie) {
+                    ctx.res.setHeader("set-cookie", setCookie);
+                }
+
+                if (data.data.accessToken) {
+                    // set new access token
+                    cookies.access_token = data.data.accessToken;
                 }
             } catch (error) {
                 console.log(error);
@@ -59,22 +60,17 @@ export const getSession = async (ctx: GetServerSidePropsContext<ParsedUrlQuery, 
 
             const data = await response.json();
 
-            if (data.message === "Unauthorized access: Please verify email address") {
-                res.writeHead(302, { Location: "/request-email-verification" });
-                res.end();
-            }
-
             return data.data as IUser;
         } catch (error) {
             console.log(error);
             throw error;
         }
-    } else {
-        if (options?.redirect) {
-            res.writeHead(302, { Location: options.redirect });
-            res.end();
-        }
-
-        return null;
     }
+
+    if (options?.redirect) {
+        res.writeHead(302, { Location: options.redirect });
+        res.end();
+    }
+
+    return null;
 };
