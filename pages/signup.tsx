@@ -47,7 +47,7 @@ const SignUp = ({ departments }: Props) => {
         defaultValues: {
             registerAs: "student",
             level: "100",
-            department: departments[0].value
+            department: departments[0]?.value
         }
     });
 
