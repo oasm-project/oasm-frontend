@@ -27,8 +27,8 @@ export const authRegister = async (data: any, accessToken?: string) => await $ht
 export const authVerifyEmail = async (data: any, accessToken?: string) => await $http.post("/auth/verify-email", data, getConfig(accessToken));
 export const authResetPassword = async (data: any, accessToken?: string) => await $http.post("/auth/reset-password", data, getConfig(accessToken));
 export const authUpdatePassword = async (data: any, accessToken?: string) => await $http.post("/auth/update-password", data, getConfig(accessToken));
-export const authRequestPasswordReset = async (query: string, accessToken?: string) => await $http.post(`/auth/request-password-reset?${query}`, null, getConfig(accessToken));
-export const authEmailVerification = async (query: string, accessToken?: string) => await $http.post(`/auth/request-email-verification?${query}`, null, getConfig(accessToken));
+export const authRequestPasswordReset = async (query: string, accessToken?: string) => await $http.post(`/auth/request-password-reset?${query}`, {}, getConfig(accessToken));
+export const authEmailVerification = async (query: string, accessToken?: string) => await $http.post(`/auth/request-email-verification?${query}`, {}, getConfig(accessToken));
 
 // Users
 export const usersGetAll = async (accessToken?: string) => await $http.get("/users", getConfig(accessToken));
