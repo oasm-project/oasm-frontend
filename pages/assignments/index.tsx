@@ -26,7 +26,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     console.log(user);
 
     if (user && !UserRole.student.includes(user.role)) {
-        ctx.res.writeHead(302, { Location: "/" });
+        ctx.res.writeHead(302, { Location: "/" }).end();
     }
 
     return {

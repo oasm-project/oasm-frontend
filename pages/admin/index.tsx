@@ -84,7 +84,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
     });
 
     if (user?.role !== "admin") {
-        ctx.res.writeHead(302, { Location: "/" });
+        ctx.res.writeHead(302, { Location: "/" }).end();
     }
 
     try {
