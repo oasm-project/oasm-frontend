@@ -1,8 +1,9 @@
 import { IUser } from "@/types/user";
 import React from "react";
 import SidebarIcon from "./SidebarIcon";
-import { MdSpaceDashboard } from "react-icons/md";
-import { MdAssignmentTurnedIn } from "react-icons/md";
+import { MdSpaceDashboard, MdAssignmentTurnedIn } from "react-icons/md";
+// User Icon
+import { FaChalkboardTeacher } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useRouter } from "next/router";
 
@@ -19,6 +20,7 @@ const Sidebar = ({ user }: Props) => {
             <div className="mt-10 flex flex-col space-y-5">
                 <SidebarIcon url="/admin" title="Dashboard" Icon={MdSpaceDashboard} />
                 <SidebarIcon url="/admin/departments" title="Departments" Icon={MdAssignmentTurnedIn} />
+                <SidebarIcon url="/admin/lecturers" title="Lecturers" Icon={FaChalkboardTeacher} />
             </div>
 
             <div className="flex-1 flex flex-col justify-end">
