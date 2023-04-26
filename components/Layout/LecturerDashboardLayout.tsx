@@ -10,12 +10,9 @@ type Props = {
 
 const AdminDashboardLayout = ({ user, children }: Props) => {
     return (
-        <div className="flex flex-row h-screen max-w-6xl overflow-hidden">
+        <div className="flex flex-row h-screen max-w-6xl mx-auto overflow-hidden">
             <Sidebar user={user} />
-            <div className="flex-1">
-                <Header user={user} />
-                {children}
-            </div>
+            <div className="flex-1">{children}</div>
         </div>
     );
 };

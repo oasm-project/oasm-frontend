@@ -1,6 +1,8 @@
 import { assignmentsGetAll } from "@/api";
 import { getSession } from "@/api/getSession";
+import { Button } from "@/components";
 import { LecturerDashboardLayout } from "@/components/Layout";
+import Header from "@/components/Lecturer/Header";
 import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { getCookie } from "cookies-next";
@@ -16,6 +18,10 @@ type Props = {
 function LecturerDashboard({ user, assignments }: Props) {
     return (
         <LecturerDashboardLayout user={user}>
+            <Header user={user}>
+                <h1 className="text-2xl font-bold text-green-700">Assignments</h1>
+                <Button text="Create Assignment" />
+            </Header>
             <div className="flex flex-col space-y-5 p-5">
                 <div className="flex flex-col md:flex-row md:space-x-5 md:space-y-0 space-y-5">
                     <div className="flex-1 bg-white p-5 rounded-md shadow-md">

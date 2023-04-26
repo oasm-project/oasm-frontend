@@ -1,6 +1,7 @@
 import { assignmentsGetAll, resultsGetAll } from "@/api";
 import { getSession } from "@/api/getSession";
 import { LecturerDashboardLayout } from "@/components/Layout";
+import Header from "@/components/Lecturer/Header";
 import { IAssignment } from "@/types/assignment";
 import { IResult } from "@/types/result";
 import { IUser } from "@/types/user";
@@ -18,6 +19,7 @@ type Props = {
 function LecturerDashboard({ user, assignments, results }: Props) {
     return (
         <LecturerDashboardLayout user={user}>
+            <Header user={user} />
             <div className="flex flex-col space-y-5 p-5">
                 <div className="flex flex-col md:flex-row md:space-x-5 md:space-y-0 space-y-5">
                     <div className="flex-1 bg-white p-5 rounded-md shadow-md">
