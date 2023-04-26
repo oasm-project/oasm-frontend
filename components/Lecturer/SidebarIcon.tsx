@@ -24,7 +24,7 @@ const SidebarIcon = ({ title, Icon, onClick, url }: Props) => {
                     isActive ? "bg-green-100" : ""
                 }`}
             >
-                <Icon className="h-6 w-6" />
+                <Icon className="h-6 w-6 flex-shrink-0" />
                 <p className="hidden sm:inline-flex">{title}</p>
             </div>
         </Link>

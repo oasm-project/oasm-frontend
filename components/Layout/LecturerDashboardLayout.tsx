@@ -10,19 +10,13 @@ type Props = {
 
 const AdminDashboardLayout = ({ user, children }: Props) => {
     return (
-        <React.Fragment>
-            <div className="hidden md:grid grid-cols-10 h-screen">
-                <Sidebar user={user} />
-                <div className="col-span-8">
-                    <Header user={user} />
-                    {children}
-                </div>
+        <div className="flex flex-row h-screen max-w-6xl overflow-hidden">
+            <Sidebar user={user} />
+            <div className="flex-1">
+                <Header user={user} />
+                {children}
             </div>
-
-            <div className="flex justify-center items-center h-screen md:hidden">
-                <p>Open this page on a desktop to view the admin dashboard.</p>
-            </div>
-        </React.Fragment>
+        </div>
     );
 };
 

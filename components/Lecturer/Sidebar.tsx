@@ -15,7 +15,8 @@ const Sidebar = ({ user }: Props) => {
     const router = useRouter();
     return (
         <div className="col-span-2 h-full p-5 flex flex-col shadow-md">
-            <h1 className="text-2xl font-bold text-green-700">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-green-700 hidden sm:inline-flex">Dashboard</h1>
+            <h1 className="text-xl font-bold text-green-700 inline-flex sm:hidden">OASM</h1>
 
             <div className="mt-10 flex flex-col space-y-5">
                 <SidebarIcon url="/dashboard" title="Dashboard" Icon={MdSpaceDashboard} />
