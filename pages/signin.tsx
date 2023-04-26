@@ -99,7 +99,7 @@ const SignIn = () => {
                     }}
                 />
 
-                <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold" />
+                <Button loading={loading} type="submit" text="Sign in" className="w-full px-6 py-3" />
 
                 {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
             </form>

@@ -45,7 +45,7 @@ export const departmentsUpdate = async (id: string, data: any, accessToken?: str
 export const departmentsDelete = async (id: string, accessToken?: string) => await $http.delete(`/departments/${id}`, getConfig(accessToken));
 
 // Assignments
-export const assignmentsGetAll = async (accessToken?: string) => await $http.get("/assignments", getConfig(accessToken));
+export const assignmentsGetAll = async (query?: string, accessToken?: string) => await $http.get(`/assignments?${query}`, getConfig(accessToken));
 export const assignmentsGetOne = async (id: string, accessToken?: string) => await $http.get(`/assignments/${id}`, getConfig(accessToken));
 export const assignmentsCreate = async (data: any, accessToken?: string) => await $http.post("/assignments", data, getConfig(accessToken));
 export const assignmentsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/assignments/${id}`, data, getConfig(accessToken));
@@ -59,7 +59,7 @@ export const submissionsUpdate = async (id: string, data: any, accessToken?: str
 export const submissionsDelete = async (id: string, accessToken?: string) => await $http.delete(`/submissions/${id}`, getConfig(accessToken));
 
 // Results
-export const resultsGetAll = async (accessToken?: string) => await $http.get("/results", getConfig(accessToken));
+export const resultsGetAll = async (query?: string, accessToken?: string) => await $http.get(`/results?${query}`, getConfig(accessToken));
 export const resultsGetOne = async (id: string, accessToken?: string) => await $http.get(`/results/${id}`, getConfig(accessToken));
 export const resultsCreate = async (data: any, accessToken?: string) => await $http.post("/results", data, getConfig(accessToken));
 export const resultsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/results/${id}`, data, getConfig(accessToken));
