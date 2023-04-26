@@ -6,6 +6,7 @@ import Header from "@/components/Lecturer/Header";
 import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { getCookie } from "cookies-next";
+import { format } from "date-fns";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import React from "react";
@@ -15,26 +16,44 @@ type Props = {
     assignments?: IAssignment[];
 };
 
-function LecturerDashboard({ user, assignments }: Props) {
+type AssignmentCardProps = {
+    assignment: IAssignment;
+};
+
+function AssignmentCard({ assignment }: AssignmentCardProps) {
+    return (
+        <div className="border rounded-md p-4 mb-4">
+            <h2 className="text-lg font-bold mb-2">{assignment.title}</h2>
+            <p className="text-sm mb-4">{assignment.description}</p>
+            <p className="text-sm mb-4">
+                <strong>Due Date: </strong>
+                {format(new Date(assignment.dueDate), "dd MMMM yyyy")}
+            </p>
+            <a href={`${process.env.BACKEND_BASE_URL}/${assignment.attachment}`} download={"attachment"} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                Download Attachment
+            </a>
+        </div>
+    );
+}
+
+function LecturerDashboard({ assignments, user }: Props) {
     return (
         <LecturerDashboardLayout user={user}>
             <Header user={user}>
                 <h1 className="text-2xl font-bold text-green-700">Assignments</h1>
                 <Button text="Create Assignment" />
             </Header>
-            <div className="flex flex-col space-y-5 p-5">
-                <div className="flex flex-col md:flex-row md:space-x-5 md:space-y-0 space-y-5">
-                    <div className="flex-1 bg-white p-5 rounded-md shadow-md">
-                        <h1 className="text-2xl font-bold text-green-700">Assignments Created</h1>
-                        <Link href="/dashboard/assignments" className="text-gray-500 hover:underline">
-                            View all assignments
-                        </Link>
-                        <div className="mt-5">
-                            <p className="text-gray-500">Total Assignments</p>
-                            <h1 className="text-3xl font-bold">{assignments?.length}</h1>
-                        </div>
+
+            <div className="p-5">
+                {assignments?.length ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {assignments.map((assignment) => (
+                            <AssignmentCard key={assignment._id} assignment={assignment} />
+                        ))}
                     </div>
-                </div>
+                ) : (
+                    <p>No assignments found.</p>
+                )}
             </div>
         </LecturerDashboardLayout>
     );
