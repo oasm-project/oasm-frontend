@@ -29,9 +29,11 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
                 <strong>Due Date: </strong>
                 {format(new Date(assignment.dueDate), "dd MMMM yyyy")}
             </p>
-            <a href={`${process.env.BACKEND_BASE_URL}/${assignment.attachment}`} download={"attachment"} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                Download Attachment
-            </a>
+            {assignment.attachment && (
+                <a href={`${process.env.BACKEND_BASE_URL}/${assignment.attachment}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
+                    Download Attachment
+                </a>
+            )}
         </div>
     );
 }
