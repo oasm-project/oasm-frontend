@@ -83,6 +83,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
         req: ctx.req
     });
 
+    console.log("accessToken", accessToken);
+
     if (user?.role !== "admin") {
         ctx.res.writeHead(302, { Location: "/" }).end();
     }
@@ -90,9 +92,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
     try {
         const users = await (await usersGetAll(accessToken as string)).data.data.users;
         const departments = await (await departmentsGetAll(accessToken as string)).data.data;
-        const assignments = await (await assignmentsGetAll(accessToken as string)).data.data.assignments;
+        const assignments = await (await assignmentsGetAll("", accessToken as string)).data.data.assignments;
         const submissions = await (await submissionsGetAll(accessToken as string)).data.data.submissions;
-        const results = await (await resultsGetAll(accessToken as string)).data.data.results;
+        const results = await (await resultsGetAll("", accessToken as string)).data.data.results;
 
         return {
             props: {
