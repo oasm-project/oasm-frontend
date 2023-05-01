@@ -1,25 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import $http, { baseURL, frontendURL } from "./xhr";
 
-const getConfig = (accessToken?: string): AxiosRequestConfig => {
-    const config: AxiosRequestConfig | any = {
-        baseURL,
-        timeout: 60000,
-        headers: {
-            "Content-Type": "application/json",
-            "Allow-Control-Allow-Origin": frontendURL,
-            "Access-Control-Allow-Credentials": "true"
-        },
-        withCredentials: true
-    };
-
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    return config;
-};
-
 // Authentication
 export const authLogin = async (data: any, accessToken?: string) => await $http.post("/auth/login", data, getConfig(accessToken));
 export const authLogout = async (data: any, accessToken?: string) => await $http.post("/auth/logout", data, getConfig(accessToken));
@@ -47,7 +28,7 @@ export const departmentsDelete = async (id: string, accessToken?: string) => awa
 // Assignments
 export const assignmentsGetAll = async (query?: string, accessToken?: string) => await $http.get(`/assignments?${query}`, getConfig(accessToken));
 export const assignmentsGetOne = async (id: string, accessToken?: string) => await $http.get(`/assignments/${id}`, getConfig(accessToken));
-export const assignmentsCreate = async (data: any, accessToken?: string) => await $http.post("/assignments", data, getConfig(accessToken));
+export const assignmentsCreate = async (data: FormData, accessToken?: string) => await $http.post("/assignments", data, formDataConfig(accessToken));
 export const assignmentsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/assignments/${id}`, data, getConfig(accessToken));
 export const assignmentsDelete = async (id: string, accessToken?: string) => await $http.delete(`/assignments/${id}`, getConfig(accessToken));
 
@@ -64,3 +45,41 @@ export const resultsGetOne = async (id: string, accessToken?: string) => await $
 export const resultsCreate = async (data: any, accessToken?: string) => await $http.post("/results", data, getConfig(accessToken));
 export const resultsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/results/${id}`, data, getConfig(accessToken));
 export const resultsDelete = async (id: string, accessToken?: string) => await $http.delete(`/results/${id}`, getConfig(accessToken));
+
+const getConfig = (accessToken?: string): AxiosRequestConfig => {
+    const config: AxiosRequestConfig | any = {
+        baseURL,
+        timeout: 60000,
+        headers: {
+            "Content-Type": "application/json",
+            "Allow-Control-Allow-Origin": frontendURL,
+            "Access-Control-Allow-Credentials": "true"
+        },
+        withCredentials: true
+    };
+
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
+};
+
+const formDataConfig = (accessToken?: string): AxiosRequestConfig => {
+    const config: AxiosRequestConfig | any = {
+        baseURL,
+        timeout: 60000,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "Allow-Control-Allow-Origin": frontendURL,
+            "Access-Control-Allow-Credentials": "true"
+        },
+        withCredentials: true
+    };
+
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
+};

@@ -35,8 +35,13 @@ function SelectInput({ name, label, control, rules, defaultValue, data, classNam
                             onBlur={onBlur}
                             onChange={onChange}
                             value={value}
-                            className="w-full px-4 py-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm appearance-none"
+                            className={`w-full px-4 py-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm appearance-none ${
+                                error ? "border-red-500" : ""
+                            }`}
                         >
+                            <option value="" disabled>
+                                Select
+                            </option>
                             {data.map((item) => (
                                 <option key={item.value} value={item.value}>
                                     {item.label}
