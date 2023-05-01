@@ -23,8 +23,10 @@ const Home = ({ user }: Props) => {
 
                         <p className="mt-4 text-lg text-gray-500 text-center md:text-left">Easily manage your assignments and submit them online. Get your assignments with ease 🤓</p>
 
-                        <Link href={user ? (user.role === Role.admin ? "/admin" : Role.lecturer ? "/dashboard" : "/assignments") : "/signup"}>
-                            <button className="btn mt-4 px-6 py-3 bg-green-700 text-white rounded-md font-semibold">{user ? "GO-TO DASHBOARD" : "GET STARTED"}</button>
+                        <Link href={user ? (user.role === Role.admin ? "/admin" : user.role === Role.lecturer ? "/dashboard" : "/assignments") : "/signup"}>
+                            <button className="btn mt-4 px-6 py-3 bg-green-700 text-white rounded-md font-semibold">
+                                {user ? (user.role === Role.admin ? "GO-TO ADMIN DASHBOARD" : user.role === Role.lecturer ? "GO-TO LECTURER DASHBOARD" : "VIEW ASSIGNMENTS") : "GET STARTED"}
+                            </button>
                         </Link>
                     </div>
 
