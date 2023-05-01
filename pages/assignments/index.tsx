@@ -63,7 +63,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     let assignments = [];
 
     if (user) {
-        const response = await assignmentsGetAll("", accessToken as string);
+        console.log("department", user.department);
+        const response = await assignmentsGetAll(`departments=${user.department}&level=${user.level}`, accessToken as string);
         assignments = response.data.data.assignments || ([] as IAssignment[]);
     }
 
