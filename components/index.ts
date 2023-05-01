@@ -5,6 +5,7 @@ export { default as TextInput } from "./TextInput";
 export { default as SelectInput } from "./SelectInput";
 export { default as Modal } from "./Modal";
 export { default as FileInput } from "./FileInput";
+export { default as SearchBar } from "./SearchBar";
 
 // Admin Dashboard
 export { default as Sidebar } from "./Admin/Sidebar";

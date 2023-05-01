@@ -1,6 +1,6 @@
 import { assignmentsGetAll } from "@/api";
 import { getSession } from "@/api/getSession";
-import { AssignmentCard } from "@/components";
+import { AssignmentCard, SearchBar } from "@/components";
 import { MainLayout } from "@/components/Layout";
 import { IAssignment } from "@/types/assignment";
 import { IUser, Role, UserRole } from "@/types/user";
@@ -12,22 +12,6 @@ import { HiOutlineSearch } from "react-icons/hi";
 type Props = {
     user: IUser | null;
     assignments?: IAssignment[];
-};
-
-type SearchBarProps = {
-    value: string;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const SearchBar = ({ value, setValue }: SearchBarProps) => {
-    return (
-        <div className="flex items-center justify-between">
-            <div className="flex items-center">
-                <HiOutlineSearch className="text-gray-500" />
-                <input type="text" className="border-b-2 border-gray-500 focus:outline-none ml-2" placeholder="Search for assignments" value={value} onChange={(e) => setValue(e.target.value)} />
-            </div>
-        </div>
-    );
 };
 
 function AssignmentsPage({ user, assignments }: Props) {
