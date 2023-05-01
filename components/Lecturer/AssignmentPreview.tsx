@@ -1,4 +1,4 @@
-import { submissionsCreate } from "@/api";
+import { submissionsCreate, submissionsGetOne } from "@/api";
 import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { AxiosError } from "axios";
@@ -9,6 +9,8 @@ import { BsFillCalendarCheckFill } from "react-icons/bs";
 import Button from "../Button";
 import FileInput from "../FileInput";
 import Modal, { ModalHandle } from "../Modal";
+import { useCSVDownloader } from "react-papaparse";
+import { ISubmission } from "@/types/submission";
 
 interface Props {
     assignment: IAssignment;
@@ -20,7 +22,6 @@ type FormValues = {
 };
 
 const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
-    console.log({ user, assignment });
     const modalRef = React.useRef<ModalHandle>(null);
     const [loading, setLoading] = React.useState(false);
 
@@ -80,6 +81,41 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
 
         return false;
     }, [assignment, user]);
+
+    const { CSVDownloader, Type } = useCSVDownloader();
+
+    const getCSVData = React.useCallback(async () => {
+        if (user.role !== "lecturer") return [];
+        async function getSubmissions() {
+            const submissions = await Promise.all(
+                assignment.submissions.map(async (submission) => {
+                    const { data } = await submissionsGetOne(submission);
+                    return data.data;
+                })
+            );
+
+            return submissions;
+        }
+
+        const submissions: ISubmission[] = await getSubmissions();
+
+        const csvData = submissions.map((submission, index) => ({
+            "S/N": index + 1,
+            NAME: submission.user.name,
+            "MATRIC NO.": submission.user.matric,
+            ANSWER: `${process.env.BACKEND_BASE_URL}/${submission.attachment}`,
+            SCORE: ""
+        }));
+
+        return csvData;
+    }, [assignment.submissions, user]);
+
+    const [csvData, setCsvData] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        getCSVData().then((data) => setCsvData(data));
+    }, [getCSVData]);
+
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div>
@@ -138,7 +174,28 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">Release Result</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                <Button text="Release Result" />
+                                <div className="flex items-center space-x-5">
+                                    {!assignment.isReleased && csvData.length > 0 ? (
+                                        <>
+                                            <CSVDownloader
+                                                type={Type.Button}
+                                                filename={`assignment-${assignment._id}-result`}
+                                                bom={true}
+                                                config={{
+                                                    delimiter: ";"
+                                                }}
+                                                data={csvData}
+                                            >
+                                                Download Template
+                                            </CSVDownloader>
+                                            <Button text="Release Result" />
+                                        </>
+                                    ) : (
+                                        <Button text="Release Result" disabled title="No submissions yet" />
+                                    )}
+
+                                    {assignment.isReleased && <span className="text-green-600">Result Released</span>}
+                                </div>
                             </dd>
                         </div>
                     )}

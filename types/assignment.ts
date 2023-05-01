@@ -10,6 +10,7 @@ export type IAssignment = {
     level: string;
     departments: IDepartment[];
     submissions: string[];
+    isReleased: boolean;
     createdBy: IUser;
     createdAt: string;
     updatedAt: string;

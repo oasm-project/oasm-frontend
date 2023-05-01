@@ -49,8 +49,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         }
     }
 
-    console.log(assignment);
-
     return {
         props: {
             user,
