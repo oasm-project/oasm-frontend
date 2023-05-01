@@ -21,7 +21,7 @@ const Sidebar = ({ user }: Props) => {
             <div className="mt-10 flex flex-col space-y-5">
                 <SidebarIcon url="/dashboard" title="Dashboard" Icon={MdSpaceDashboard} />
                 <SidebarIcon url="/dashboard/assignments" title="Assignments" Icon={MdAssignmentTurnedIn} />
-                <SidebarIcon url="/dashboard/results" title="Results" Icon={GoFileSubmodule} />
+                {/* <SidebarIcon url="/dashboard/results" title="Results" Icon={GoFileSubmodule} /> */}
             </div>
 
             <div className="flex-1 flex flex-col justify-end">

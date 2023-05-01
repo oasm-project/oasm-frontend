@@ -1,6 +1,6 @@
 import { assignmentsCreate, assignmentsGetAll, departmentsGetAll } from "@/api";
 import { getSession } from "@/api/getSession";
-import { Button, FileInput, Modal, SelectInput, TextInput } from "@/components";
+import { AssignmentCard, Button, FileInput, Modal, SelectInput, TextInput } from "@/components";
 import { LecturerDashboardLayout } from "@/components/Layout";
 import Header from "@/components/Lecturer/Header";
 import { ModalHandle } from "@/components/Modal";
@@ -8,9 +8,7 @@ import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { AxiosError } from "axios";
 import { getCookie } from "cookies-next";
-import { format } from "date-fns";
 import { GetServerSidePropsContext } from "next";
-import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -24,28 +22,6 @@ type DepartmentData = {
     label: string;
     value: string;
 };
-
-type AssignmentCardProps = {
-    assignment: IAssignment;
-};
-
-function AssignmentCard({ assignment }: AssignmentCardProps) {
-    return (
-        <div className="border rounded-md p-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">{assignment.title}</h2>
-            <p className="text-sm mb-4">{assignment.description}</p>
-            <p className="text-sm mb-4">
-                <strong>Due Date: </strong>
-                {format(new Date(assignment.dueDate), "dd MMMM yyyy")}
-            </p>
-            {assignment.attachment && (
-                <a href={`${process.env.BACKEND_BASE_URL}/${assignment.attachment}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
-                    Download Attachment
-                </a>
-            )}
-        </div>
-    );
-}
 
 type FormValues = {
     title: string;

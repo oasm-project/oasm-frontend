@@ -14,3 +14,5 @@ export { default as SidebarIcon } from "./Admin/SidebarIcon";
 export { default as LecturerSidebar } from "./Lecturer/Sidebar";
 export { default as LecturerSidebarIcon } from "./Lecturer/SidebarIcon";
 export { default as LecturerHeader } from "./Lecturer/Header";
+export { default as AssignmentCard } from "./Lecturer/AssignmentCard";
+export { default as AssignmentPreview } from "./Lecturer/AssignmentPreview";
