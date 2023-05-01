@@ -42,7 +42,7 @@ export const submissionsDelete = async (id: string, accessToken?: string) => awa
 // Results
 export const resultsGetAll = async (query?: string, accessToken?: string) => await $http.get(`/results?${query}`, getConfig(accessToken));
 export const resultsGetOne = async (id: string, accessToken?: string) => await $http.get(`/results/${id}`, getConfig(accessToken));
-export const resultsCreate = async (data: any, accessToken?: string) => await $http.post("/results", data, getConfig(accessToken));
+export const resultsCreate = async (data: FormData, accessToken?: string) => await $http.post("/results", data, formDataConfig(accessToken));
 export const resultsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/results/${id}`, data, getConfig(accessToken));
 export const resultsDelete = async (id: string, accessToken?: string) => await $http.delete(`/results/${id}`, getConfig(accessToken));
 

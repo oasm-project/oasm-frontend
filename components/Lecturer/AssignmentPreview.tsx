@@ -1,4 +1,4 @@
-import { submissionsCreate, submissionsGetOne } from "@/api";
+import { resultsCreate, resultsGetAll, submissionsCreate, submissionsGetOne } from "@/api";
 import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { AxiosError } from "axios";
@@ -9,8 +9,9 @@ import { BsFillCalendarCheckFill } from "react-icons/bs";
 import Button from "../Button";
 import FileInput from "../FileInput";
 import Modal, { ModalHandle } from "../Modal";
-import { useCSVDownloader } from "react-papaparse";
+import { useCSVDownloader, usePapaParse } from "react-papaparse";
 import { ISubmission } from "@/types/submission";
+import { IResult } from "@/types/result";
 
 interface Props {
     assignment: IAssignment;
@@ -116,6 +117,84 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
         getCSVData().then((data) => setCsvData(data));
     }, [getCSVData]);
 
+    const releaseResultModalRef = React.useRef<ModalHandle>(null);
+    const [loadingReleaseResult, setLoadingReleaseResult] = React.useState(false);
+
+    const handleOpenReleaseResultModal = () => {
+        releaseResultModalRef.current?.open();
+    };
+
+    const {
+        handleSubmit: handleSubmitReleaseResult,
+        control: controlReleaseResult,
+        formState: { errors: errorsReleaseResult, isDirty: isDirtyReleaseResult, isValid: isValidReleaseResult },
+        reset: resetReleaseResult
+    } = useForm<FormValues>({ mode: "onChange" });
+
+    const onSubmitReleaseResult = async (data: FormValues) => {
+        var formData = new FormData();
+        formData.append("attachment", data.attachment as File, data.attachment?.name);
+        formData.append("assignment", assignment._id);
+
+        setLoadingReleaseResult(true);
+        try {
+            const response = await resultsCreate(formData);
+            if (response.data.success) {
+                releaseResultModalRef.current?.close();
+                resetReleaseResult();
+            }
+        } catch (error: AxiosError | any) {
+            if (error.response?.status === 400) {
+                setError("root", {
+                    type: "manual",
+                    message: error.response.data.message || "Something went wrong"
+                });
+
+                console.error(error.response.data);
+            } else {
+                setError("root", {
+                    type: "manual",
+                    message: "Something went wrong"
+                });
+            }
+
+            console.error(error);
+        } finally {
+            setLoadingReleaseResult(false);
+        }
+    };
+
+    const { readRemoteFile } = usePapaParse();
+    const [result, setResult] = React.useState<string | null>(null);
+
+    const handleGetResult = React.useCallback(async () => {
+        const { data } = await resultsGetAll(`assignment=${assignment._id}`);
+        const result = data.data.results[0] as IResult;
+        console.log(result);
+        const matric = user.matric.toString();
+
+        readRemoteFile(`${process.env.BACKEND_BASE_URL}/${result.attachment}`, {
+            complete: (results) => {
+                const data = results.data as string[][];
+                const student = data.find((row) => row[2] === matric);
+                if (student) {
+                    setResult(student[4]);
+                }
+            },
+            download: true,
+            delimiter: "," // auto-detect
+        });
+    }, [assignment._id, readRemoteFile, user.matric]);
+
+    React.useEffect(() => {
+        if (user.role === "student") {
+            const submission = assignment.submissions.find((submission) => submission === user._id);
+            if (submission) {
+                handleGetResult();
+            }
+        }
+    }, [assignment.submissions, assignment._id, handleGetResult, user.role, user._id]);
+
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div>
@@ -188,7 +267,7 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
                                             >
                                                 Download Template
                                             </CSVDownloader>
-                                            <Button text="Release Result" />
+                                            <Button text="Release Result" className="bg-green-700 text-white px-4 py-2 rounded-md" onClick={handleOpenReleaseResultModal} />
                                         </>
                                     ) : (
                                         <Button text="Release Result" disabled title="No submissions yet" />
@@ -203,7 +282,7 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
                     {user.role === "student" && (
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">Result</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">PENDING</dd>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{result ? result : "No result yet"}</dd>
                         </div>
                     )}
                 </dl>
@@ -236,11 +315,47 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
                         <Button
                             loading={loading}
                             type="submit"
-                            text="Create Department"
+                            text="Submit"
                             className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2"
                             disabled={!isDirty || !isValid}
                         />
                         {errors.root && <p className="text-red-500 text-center">{errors.root.message}</p>}
+                    </form>
+                </div>
+            </Modal>
+
+            {/* Release Result Modal */}
+            <Modal noCancelButton ref={releaseResultModalRef}>
+                <div className="flex flex-col items-center justify-center max-w-[500px] p-5">
+                    <h1 className="text-2xl font-bold text-center">
+                        <span className="text-green-700">Release</span> Result
+                    </h1>
+
+                    <form onSubmit={handleSubmitReleaseResult(onSubmitReleaseResult)} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <FileInput
+                            className="col-span-2"
+                            control={controlReleaseResult}
+                            name="attachment"
+                            label="Attachment"
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: "Attachment is required"
+                                },
+                                validate: {
+                                    lessThan10MB: (file) => file?.size < 10000000 || "Max 10MB"
+                                }
+                            }}
+                        />
+
+                        <Button
+                            loading={loadingReleaseResult}
+                            type="submit"
+                            text="Release"
+                            className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2"
+                            disabled={!isDirtyReleaseResult || !isValidReleaseResult}
+                        />
+                        {errorsReleaseResult.root && <p className="text-red-500 text-center">{errorsReleaseResult.root.message}</p>}
                     </form>
                 </div>
             </Modal>
