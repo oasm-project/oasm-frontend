@@ -7,19 +7,48 @@ import { IUser, Role, UserRole } from "@/types/user";
 import { getCookie } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
+import { HiOutlineSearch } from "react-icons/hi";
 
 type Props = {
     user: IUser | null;
     assignments?: IAssignment[];
 };
 
-function AssignmentsPage({ user, assignments }: Props) {
+type SearchBarProps = {
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const SearchBar = ({ value, setValue }: SearchBarProps) => {
     return (
-        <MainLayout user={user}>
+        <div className="flex items-center justify-between">
+            <div className="flex items-center">
+                <HiOutlineSearch className="text-gray-500" />
+                <input type="text" className="border-b-2 border-gray-500 focus:outline-none ml-2" placeholder="Search for assignments" value={value} onChange={(e) => setValue(e.target.value)} />
+            </div>
+        </div>
+    );
+};
+
+function AssignmentsPage({ user, assignments }: Props) {
+    const [searchString, setSearchString] = React.useState("");
+
+    const filteredAssignments = React.useMemo(() => {
+        if (!assignments) return [];
+
+        return assignments.filter((assignment) => {
+            if (searchString === "") return true;
+
+            return assignment.title.toLowerCase().includes(searchString.toLowerCase());
+        });
+    }, [assignments, searchString]);
+
+    return (
+        <MainLayout middleContent={<SearchBar value={searchString} setValue={setSearchString} />} user={user}>
             <div className="p-5">
-                {assignments?.length && user ? (
+                {filteredAssignments?.length && user ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {assignments.map((assignment) => (
+                        {filteredAssignments.map((assignment) => (
                             <AssignmentCard key={assignment._id} assignment={assignment} user={user} />
                         ))}
                     </div>
