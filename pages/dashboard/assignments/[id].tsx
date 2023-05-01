@@ -17,7 +17,7 @@ type Props = {
 function AssignmentPreviewPage({ user, assignment }: Props) {
     return (
         <LecturerDashboardLayout user={user}>
-            <div className="p-5">{assignment ? <AssignmentPreview assignment={assignment} /> : <p>No assignment found.</p>}</div>
+            <div className="p-5">{assignment && user ? <AssignmentPreview assignment={assignment} user={user} /> : <p>No assignment found.</p>}</div>
         </LecturerDashboardLayout>
     );
 }
@@ -48,6 +48,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
             console.error(error);
         }
     }
+
+    console.log(assignment);
 
     return {
         props: {

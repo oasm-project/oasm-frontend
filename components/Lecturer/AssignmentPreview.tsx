@@ -1,11 +1,15 @@
 import { IAssignment } from "@/types/assignment";
+import { IUser } from "@/types/user";
 import { format } from "date-fns";
+import { BsFillCalendarCheckFill } from "react-icons/bs";
+import Button from "../Button";
 
 interface Props {
     assignment: IAssignment;
+    user: IUser;
 }
 
-const AssignmentPreview: React.FC<Props> = ({ assignment }) => {
+const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
@@ -26,7 +30,13 @@ const AssignmentPreview: React.FC<Props> = ({ assignment }) => {
                     )}
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Due Date</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{format(new Date(assignment.dueDate), "dd/MM/yyyy")}</dd>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div className="flex items-center">
+                                {format(new Date(assignment.dueDate), "dd MMMM yyyy")}
+                                {/* check if assignment is overdue */}
+                                {new Date(assignment.dueDate) < new Date() && <BsFillCalendarCheckFill className="ml-2 text-red-500" />}
+                            </div>
+                        </dd>
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Level</dt>
@@ -48,6 +58,22 @@ const AssignmentPreview: React.FC<Props> = ({ assignment }) => {
                         <dt className="text-sm font-medium text-gray-500">Created At</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{format(new Date(assignment.createdAt), "dd/MM/yyyy")}</dd>
                     </div>
+                    {/* Release Result */}
+                    {user.role === "lecturer" && (
+                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">Release Result</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <Button text="Release Result" />
+                            </dd>
+                        </div>
+                    )}
+                    {/* View Result */}
+                    {user.role === "student" && (
+                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">View Result</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">PENDING</dd>
+                        </div>
+                    )}
                 </dl>
             </div>
         </div>
