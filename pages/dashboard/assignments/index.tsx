@@ -111,10 +111,10 @@ function LecturerDashboard({ assignments, departments, user }: Props) {
             </Header>
 
             <div className="p-5">
-                {assignmentsData?.length ? (
+                {assignmentsData?.length && user ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {assignmentsData.map((assignment) => (
-                            <AssignmentCard key={assignment._id} assignment={assignment} />
+                            <AssignmentCard key={assignment._id} assignment={assignment} user={user} />
                         ))}
                     </div>
                 ) : (

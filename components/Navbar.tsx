@@ -29,7 +29,7 @@ function Navbar({ user }: Props) {
 
                 {user && (
                     <>
-                        <Link href={user.role === Role.admin ? "/admin" : Role.lecturer ? "/dashboard" : "/assignments"}>
+                        <Link href={user.role === Role.admin ? "/admin" : user.role === Role.lecturer ? "/dashboard" : "/assignments"}>
                             {[Role.admin, Role.lecturer].includes(user.role) ? <Button text="Dashboard" /> : <Button text="Assignments" />}
                         </Link>
 
