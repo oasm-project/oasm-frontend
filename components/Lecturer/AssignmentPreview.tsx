@@ -251,7 +251,7 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
                                                 filename={`assignment-${assignment._id}-result`}
                                                 bom={true}
                                                 config={{
-                                                    delimiter: ";"
+                                                    delimiter: ","
                                                 }}
                                                 data={csvData}
                                             >
