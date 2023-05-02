@@ -1,4 +1,4 @@
-import { resultsCreate, resultsGetAll, submissionsCreate, submissionsGetOne } from "@/api";
+import { resultsCreate, resultsGetAll, submissionsCreate, submissionsGetAll, submissionsGetOne } from "@/api";
 import { IAssignment } from "@/types/assignment";
 import { IUser } from "@/types/user";
 import { AxiosError } from "axios";
@@ -87,18 +87,8 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
 
     const getCSVData = React.useCallback(async () => {
         if (user.role !== "lecturer") return [];
-        async function getSubmissions() {
-            const submissions = await Promise.all(
-                assignment.submissions.map(async (submission) => {
-                    const { data } = await submissionsGetOne(submission);
-                    return data.data;
-                })
-            );
 
-            return submissions;
-        }
-
-        const submissions: ISubmission[] = await getSubmissions();
+        const submissions = (await (await submissionsGetAll(`assignment=${assignment._id}`)).data.data.submissions) as ISubmission[];
 
         const csvData = submissions.map((submission, index) => ({
             "S/N": index + 1,
@@ -109,7 +99,7 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
         }));
 
         return csvData;
-    }, [assignment.submissions, user]);
+    }, [assignment, user]);
 
     const [csvData, setCsvData] = React.useState<any[]>([]);
 
@@ -187,13 +177,13 @@ const AssignmentPreview: React.FC<Props> = ({ assignment, user }) => {
     }, [assignment._id, readRemoteFile, user.matric]);
 
     React.useEffect(() => {
-        if (user.role === "student") {
+        if (user.role === "student" && assignment.isReleased) {
             const submission = assignment.submissions.find((submission) => submission === user._id);
             if (submission) {
                 handleGetResult();
             }
         }
-    }, [assignment.submissions, assignment._id, handleGetResult, user.role, user._id]);
+    }, [assignment.submissions, assignment._id, handleGetResult, user.role, user._id, assignment.isReleased]);
 
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
