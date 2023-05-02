@@ -203,7 +203,7 @@ function LecturerDashboard({ assignments, departments, user }: Props) {
                         <Button
                             loading={loading}
                             type="submit"
-                            text="Create Department"
+                            text="Create Assignment"
                             className="w-full px-6 py-3 bg-green-700 text-white rounded-md font-semibold sm:col-span-2"
                             disabled={!isDirty || !isValid}
                         />
