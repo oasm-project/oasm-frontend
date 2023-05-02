@@ -33,7 +33,7 @@ export const assignmentsUpdate = async (id: string, data: any, accessToken?: str
 export const assignmentsDelete = async (id: string, accessToken?: string) => await $http.delete(`/assignments/${id}`, getConfig(accessToken));
 
 // Submissions
-export const submissionsGetAll = async (accessToken?: string) => await $http.get("/submissions", getConfig(accessToken));
+export const submissionsGetAll = async (query?: string, accessToken?: string) => await $http.get(`/submissions?${query}`, getConfig(accessToken));
 export const submissionsGetOne = async (id: string, accessToken?: string) => await $http.get(`/submissions/${id}`, getConfig(accessToken));
 export const submissionsCreate = async (data: FormData, accessToken?: string) => await $http.post("/submissions", data, formDataConfig(accessToken));
 export const submissionsUpdate = async (id: string, data: any, accessToken?: string) => await $http.put(`/submissions/${id}`, data, getConfig(accessToken));
